@@ -2,47 +2,47 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Matthew Pugh</title>
-    <link>http://rexyroo.github.io/</link>
-      <atom:link href="http://rexyroo.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <link>http://mopugh.github.io/</link>
+      <atom:link href="http://mopugh.github.io/index.xml" rel="self" type="application/rss+xml" />
     <description>Matthew Pugh</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 21 Mar 2015 18:45:22 -0700</lastBuildDate>
     <image>
-      <url>http://rexyroo.github.io/img/icon-192.png</url>
+      <url>http://mopugh.github.io/img/icon-192.png</url>
       <title>Matthew Pugh</title>
-      <link>http://rexyroo.github.io/</link>
+      <link>http://mopugh.github.io/</link>
     </image>
     
     <item>
       <title>Sensor Fusion for Intrusion Detection Under False Alarm Constraints</title>
-      <link>http://rexyroo.github.io/publication/sasfalsealarm/</link>
+      <link>http://mopugh.github.io/publication/sasfalsealarm/</link>
       <pubDate>Sat, 21 Mar 2015 18:45:22 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/sasfalsealarm/</guid>
+      <guid>http://mopugh.github.io/publication/sasfalsealarm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>A Minimax Approach to Sensor Fusion for Intrusion Detection</title>
-      <link>http://rexyroo.github.io/publication/sasminimax/</link>
+      <link>http://mopugh.github.io/publication/sasminimax/</link>
       <pubDate>Sat, 21 Mar 2015 18:39:50 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/sasminimax/</guid>
+      <guid>http://mopugh.github.io/publication/sasminimax/</guid>
       <description></description>
     </item>
     
     <item>
       <title>A Generative Model Approach to Run Differential</title>
-      <link>http://rexyroo.github.io/post/run-differential-2/</link>
+      <link>http://mopugh.github.io/post/run-differential-2/</link>
       <pubDate>Sun, 20 Jul 2014 00:00:00 +0000</pubDate>
-      <guid>http://rexyroo.github.io/post/run-differential-2/</guid>
+      <guid>http://mopugh.github.io/post/run-differential-2/</guid>
       <description>
 
 &lt;h2 id=&#34;more-on-run-differential&#34;&gt;More On Run Differential&lt;/h2&gt;
 
-&lt;p&gt;In the &lt;a href=&#34;http://rexyroo.github.io/post/run-differential-1/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; post, I looked at run differential from a correlation point of view. The correlation analysis is not very predictive however, unless we want to assume there is a linear relationship between normalized run differential and end-of-season run differential (which there could be, but the analysis seems to suggest the joint distribution is not Gaussian in which case the correlation is difficult to interpret). In this post, I&amp;rsquo;ll take a Bayesian approach to run differential that will be more predictive in nature. Namely, I will assume that the per game run differential (not normalized) is a discrete random variable. I will use the historical data on run differential to generate a prior and then use the games played by the A&amp;rsquo;s this season to estimate the probabilities of the discrete random variable. With those parameters estimated, I can compute the distribution of run differential at the end of the season. Additionally, it is straight forward to convert the multinomial run differential distribution into a binomial win distribution. In this way, I will also compute the distribution of the number of wins at the of the season.
+&lt;p&gt;In the &lt;a href=&#34;http://mopugh.github.io/post/run-differential-1/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; post, I looked at run differential from a correlation point of view. The correlation analysis is not very predictive however, unless we want to assume there is a linear relationship between normalized run differential and end-of-season run differential (which there could be, but the analysis seems to suggest the joint distribution is not Gaussian in which case the correlation is difficult to interpret). In this post, I&amp;rsquo;ll take a Bayesian approach to run differential that will be more predictive in nature. Namely, I will assume that the per game run differential (not normalized) is a discrete random variable. I will use the historical data on run differential to generate a prior and then use the games played by the A&amp;rsquo;s this season to estimate the probabilities of the discrete random variable. With those parameters estimated, I can compute the distribution of run differential at the end of the season. Additionally, it is straight forward to convert the multinomial run differential distribution into a binomial win distribution. In this way, I will also compute the distribution of the number of wins at the of the season.
 &lt;!-- PELICAN_END_SUMMARY --&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;prior-run-differential-distribution&#34;&gt;Prior Run Differential Distribution&lt;/h2&gt;
 
-&lt;p&gt;From the run differential data parsed in the &lt;a href=&#34;http://rexyroo.github.io/post/run-differential-1/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt;, it is straight forward to compute the run differential distribution from all the games from 1962 to 2013. Below is the distribution:&lt;/p&gt;
+&lt;p&gt;From the run differential data parsed in the &lt;a href=&#34;http://mopugh.github.io/post/run-differential-1/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt;, it is straight forward to compute the run differential distribution from all the games from 1962 to 2013. Below is the distribution:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;./images/output_1_0.png&#34; alt=&#34;Histogram of Run-Differential&#34; /&gt;&lt;/p&gt;
 
@@ -124,9 +124,9 @@ p(X = i \vert \mathcal{D}) = \frac{\alpha_j + N_j}{\sum (\alpha_i + N_i)}
     
     <item>
       <title>A Correlation Analysis of Run Differential</title>
-      <link>http://rexyroo.github.io/post/run-differential-1/</link>
+      <link>http://mopugh.github.io/post/run-differential-1/</link>
       <pubDate>Sat, 19 Jul 2014 00:00:00 +0000</pubDate>
-      <guid>http://rexyroo.github.io/post/run-differential-1/</guid>
+      <guid>http://mopugh.github.io/post/run-differential-1/</guid>
       <description>
 
 &lt;h2 id=&#34;everyone-s-talking-about-run-differential&#34;&gt;Everyone&amp;rsquo;s Talking About Run Differential&lt;/h2&gt;
@@ -211,14 +211,14 @@ for year in range(1962,2014):
     
     <item>
       <title>Variation on Markowitz Portfolio Optimization</title>
-      <link>http://rexyroo.github.io/post/dual-markowitz/</link>
+      <link>http://mopugh.github.io/post/dual-markowitz/</link>
       <pubDate>Sat, 15 Mar 2014 00:00:00 +0000</pubDate>
-      <guid>http://rexyroo.github.io/post/dual-markowitz/</guid>
+      <guid>http://mopugh.github.io/post/dual-markowitz/</guid>
       <description>
 
 &lt;h2 id=&#34;main-idea&#34;&gt;Main Idea&lt;/h2&gt;
 
-&lt;p&gt;In the &lt;a href=&#34;http://rexyroo.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt;, I was trying to solve the Markowitz portfolio optimization problem under the no shorts constraint:&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://mopugh.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt;, I was trying to solve the Markowitz portfolio optimization problem under the no shorts constraint:&lt;/p&gt;
 
 &lt;p&gt;\begin{align}
 &amp;amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp;amp; &amp;amp; \mathbf{x}^{T} \Sigma \mathbf{x} \&lt;br /&gt;
@@ -258,7 +258,7 @@ for year in range(1962,2014):
 &amp;amp; G_{i} = \left [ -\mathbf{e}_{i}^{T} \right ] &amp;amp; \mbox{ and } &amp;amp; \mathbf{h}_{i} = \left [ 0 \right ] &amp;amp; \mbox{ for } i = 2,\ldots,n+1
 \end{align}&lt;/p&gt;
 
-&lt;p&gt;with the additional equality constraints described above. When implementing the prior SOCP, errors were encountered because apparently the method to generate the covariance matrix does not guarantee a positive semi-definite $\Sigma$, which is required of a QCQP or SOCP. Because this is more an exercise in implementing ideas in python than to implementing perfect algorithms, I just made a quick fix: I project the $\Sigma$ matrix onto the positive semi-definite cone by making all the negative eigenvalues in $\Sigma$ equal to 0 (aside: in retrospect, this should be done in the &lt;a href=&#34;http://rexyroo.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; as well). Thus the final implementation of the SOCP for this problem is the following additional method to my MarkowitzOpt class:&lt;/p&gt;
+&lt;p&gt;with the additional equality constraints described above. When implementing the prior SOCP, errors were encountered because apparently the method to generate the covariance matrix does not guarantee a positive semi-definite $\Sigma$, which is required of a QCQP or SOCP. Because this is more an exercise in implementing ideas in python than to implementing perfect algorithms, I just made a quick fix: I project the $\Sigma$ matrix onto the positive semi-definite cone by making all the negative eigenvalues in $\Sigma$ equal to 0 (aside: in retrospect, this should be done in the &lt;a href=&#34;http://mopugh.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; as well). Thus the final implementation of the SOCP for this problem is the following additional method to my MarkowitzOpt class:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def FlipConstraintMarkowitzOpt(meanvec,varvec,covvec,irate,varmax):
 	&#39;&#39;&#39;Solve QCQP by converting to SOCP
@@ -327,7 +327,7 @@ for year in range(1962,2014):
 
 &lt;h2 id=&#34;results&#34;&gt;Results&lt;/h2&gt;
 
-&lt;p&gt;Running the same script as in the &lt;a href=&#34;http://rexyroo.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; except for calling the new method FlipConstraintMarkowitzOpt and using a maximum variance parameter of $\sigma_{max} = 0.001$ yields the following figures:&lt;/p&gt;
+&lt;p&gt;Running the same script as in the &lt;a href=&#34;http://mopugh.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; except for calling the new method FlipConstraintMarkowitzOpt and using a maximum variance parameter of $\sigma_{max} = 0.001$ yields the following figures:&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&#34;./images/output_4_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
 
@@ -343,9 +343,9 @@ for year in range(1962,2014):
     
     <item>
       <title>Markowitz Portfolio Optimization</title>
-      <link>http://rexyroo.github.io/post/markowitz/</link>
+      <link>http://mopugh.github.io/post/markowitz/</link>
       <pubDate>Sun, 09 Mar 2014 00:00:00 +0000</pubDate>
-      <guid>http://rexyroo.github.io/post/markowitz/</guid>
+      <guid>http://mopugh.github.io/post/markowitz/</guid>
       <description>
 
 &lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
@@ -587,65 +587,65 @@ plt.show()
     
     <item>
       <title>The Proportional Fair Sharing Algorithm Under i.i.d. Models</title>
-      <link>http://rexyroo.github.io/publication/pfsasilomar/</link>
+      <link>http://mopugh.github.io/publication/pfsasilomar/</link>
       <pubDate>Sun, 21 Oct 2012 18:58:19 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/pfsasilomar/</guid>
+      <guid>http://mopugh.github.io/publication/pfsasilomar/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Diffuse Mid-UV Communication in the Presence of Obscurants</title>
-      <link>http://rexyroo.github.io/publication/uvasilomar/</link>
+      <link>http://mopugh.github.io/publication/uvasilomar/</link>
       <pubDate>Sun, 21 Oct 2012 18:50:24 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/uvasilomar/</guid>
+      <guid>http://mopugh.github.io/publication/uvasilomar/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Feedback Reduction by Thresholding in Multi-User Broadcast Channels: Design and Limits</title>
-      <link>http://rexyroo.github.io/publication/asilomar2011/</link>
+      <link>http://mopugh.github.io/publication/asilomar2011/</link>
       <pubDate>Mon, 20 Jun 2011 20:02:47 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/asilomar2011/</guid>
+      <guid>http://mopugh.github.io/publication/asilomar2011/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Feedback Reduction Techniques and Fairness in Multi-User MIMO Broadcast Channels with Random Beamforming</title>
-      <link>http://rexyroo.github.io/publication/thesis/</link>
+      <link>http://mopugh.github.io/publication/thesis/</link>
       <pubDate>Wed, 20 Apr 2011 19:57:24 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/thesis/</guid>
+      <guid>http://mopugh.github.io/publication/thesis/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Distributed Quantization of Order Statistics with Applications to CSI Feedback</title>
-      <link>http://rexyroo.github.io/publication/dcc2011/</link>
+      <link>http://mopugh.github.io/publication/dcc2011/</link>
       <pubDate>Sun, 20 Mar 2011 20:03:38 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/dcc2011/</guid>
+      <guid>http://mopugh.github.io/publication/dcc2011/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Feedback Reduction in MIMO Broadcast Channels with LMMSE Receivers</title>
-      <link>http://rexyroo.github.io/publication/icassp2010/</link>
+      <link>http://mopugh.github.io/publication/icassp2010/</link>
       <pubDate>Mon, 20 Sep 2010 20:02:32 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/icassp2010/</guid>
+      <guid>http://mopugh.github.io/publication/icassp2010/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Reduced Feedback Schemes Using Random Beamforming in MIMO Broadcast Channels</title>
-      <link>http://rexyroo.github.io/publication/tsp2010/</link>
+      <link>http://mopugh.github.io/publication/tsp2010/</link>
       <pubDate>Sat, 20 Mar 2010 20:02:57 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/tsp2010/</guid>
+      <guid>http://mopugh.github.io/publication/tsp2010/</guid>
       <description></description>
     </item>
     
     <item>
       <title>On the Capacity of MIMO Broadcast Channels with Reduced Feedback by Antenna Selection</title>
-      <link>http://rexyroo.github.io/publication/asilomar2008/</link>
+      <link>http://mopugh.github.io/publication/asilomar2008/</link>
       <pubDate>Tue, 28 Oct 2008 19:45:23 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/asilomar2008/</guid>
+      <guid>http://mopugh.github.io/publication/asilomar2008/</guid>
       <description></description>
     </item>
     

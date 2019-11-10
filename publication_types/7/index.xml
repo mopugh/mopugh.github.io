@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>7 | Matthew Pugh</title>
-    <link>http://rexyroo.github.io/publication_types/7/</link>
-      <atom:link href="http://rexyroo.github.io/publication_types/7/index.xml" rel="self" type="application/rss+xml" />
+    <link>http://mopugh.github.io/publication_types/7/</link>
+      <atom:link href="http://mopugh.github.io/publication_types/7/index.xml" rel="self" type="application/rss+xml" />
     <description>7</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 20 Apr 2011 19:57:24 -0700</lastBuildDate>
     <image>
-      <url>http://rexyroo.github.io/img/icon-192.png</url>
+      <url>http://mopugh.github.io/img/icon-192.png</url>
       <title>7</title>
-      <link>http://rexyroo.github.io/publication_types/7/</link>
+      <link>http://mopugh.github.io/publication_types/7/</link>
     </image>
     
     <item>
       <title>Feedback Reduction Techniques and Fairness in Multi-User MIMO Broadcast Channels with Random Beamforming</title>
-      <link>http://rexyroo.github.io/publication/thesis/</link>
+      <link>http://mopugh.github.io/publication/thesis/</link>
       <pubDate>Wed, 20 Apr 2011 19:57:24 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/thesis/</guid>
+      <guid>http://mopugh.github.io/publication/thesis/</guid>
       <description></description>
     </item>
     

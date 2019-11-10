@@ -2,93 +2,93 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Publications | Matthew Pugh</title>
-    <link>http://rexyroo.github.io/publication/</link>
-      <atom:link href="http://rexyroo.github.io/publication/index.xml" rel="self" type="application/rss+xml" />
+    <link>http://mopugh.github.io/publication/</link>
+      <atom:link href="http://mopugh.github.io/publication/index.xml" rel="self" type="application/rss+xml" />
     <description>Publications</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 21 Mar 2015 18:45:22 -0700</lastBuildDate>
     <image>
-      <url>http://rexyroo.github.io/img/icon-192.png</url>
+      <url>http://mopugh.github.io/img/icon-192.png</url>
       <title>Publications</title>
-      <link>http://rexyroo.github.io/publication/</link>
+      <link>http://mopugh.github.io/publication/</link>
     </image>
     
     <item>
       <title>Sensor Fusion for Intrusion Detection Under False Alarm Constraints</title>
-      <link>http://rexyroo.github.io/publication/sasfalsealarm/</link>
+      <link>http://mopugh.github.io/publication/sasfalsealarm/</link>
       <pubDate>Sat, 21 Mar 2015 18:45:22 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/sasfalsealarm/</guid>
+      <guid>http://mopugh.github.io/publication/sasfalsealarm/</guid>
       <description></description>
     </item>
     
     <item>
       <title>A Minimax Approach to Sensor Fusion for Intrusion Detection</title>
-      <link>http://rexyroo.github.io/publication/sasminimax/</link>
+      <link>http://mopugh.github.io/publication/sasminimax/</link>
       <pubDate>Sat, 21 Mar 2015 18:39:50 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/sasminimax/</guid>
+      <guid>http://mopugh.github.io/publication/sasminimax/</guid>
       <description></description>
     </item>
     
     <item>
       <title>The Proportional Fair Sharing Algorithm Under i.i.d. Models</title>
-      <link>http://rexyroo.github.io/publication/pfsasilomar/</link>
+      <link>http://mopugh.github.io/publication/pfsasilomar/</link>
       <pubDate>Sun, 21 Oct 2012 18:58:19 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/pfsasilomar/</guid>
+      <guid>http://mopugh.github.io/publication/pfsasilomar/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Diffuse Mid-UV Communication in the Presence of Obscurants</title>
-      <link>http://rexyroo.github.io/publication/uvasilomar/</link>
+      <link>http://mopugh.github.io/publication/uvasilomar/</link>
       <pubDate>Sun, 21 Oct 2012 18:50:24 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/uvasilomar/</guid>
+      <guid>http://mopugh.github.io/publication/uvasilomar/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Feedback Reduction by Thresholding in Multi-User Broadcast Channels: Design and Limits</title>
-      <link>http://rexyroo.github.io/publication/asilomar2011/</link>
+      <link>http://mopugh.github.io/publication/asilomar2011/</link>
       <pubDate>Mon, 20 Jun 2011 20:02:47 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/asilomar2011/</guid>
+      <guid>http://mopugh.github.io/publication/asilomar2011/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Feedback Reduction Techniques and Fairness in Multi-User MIMO Broadcast Channels with Random Beamforming</title>
-      <link>http://rexyroo.github.io/publication/thesis/</link>
+      <link>http://mopugh.github.io/publication/thesis/</link>
       <pubDate>Wed, 20 Apr 2011 19:57:24 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/thesis/</guid>
+      <guid>http://mopugh.github.io/publication/thesis/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Distributed Quantization of Order Statistics with Applications to CSI Feedback</title>
-      <link>http://rexyroo.github.io/publication/dcc2011/</link>
+      <link>http://mopugh.github.io/publication/dcc2011/</link>
       <pubDate>Sun, 20 Mar 2011 20:03:38 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/dcc2011/</guid>
+      <guid>http://mopugh.github.io/publication/dcc2011/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Feedback Reduction in MIMO Broadcast Channels with LMMSE Receivers</title>
-      <link>http://rexyroo.github.io/publication/icassp2010/</link>
+      <link>http://mopugh.github.io/publication/icassp2010/</link>
       <pubDate>Mon, 20 Sep 2010 20:02:32 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/icassp2010/</guid>
+      <guid>http://mopugh.github.io/publication/icassp2010/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Reduced Feedback Schemes Using Random Beamforming in MIMO Broadcast Channels</title>
-      <link>http://rexyroo.github.io/publication/tsp2010/</link>
+      <link>http://mopugh.github.io/publication/tsp2010/</link>
       <pubDate>Sat, 20 Mar 2010 20:02:57 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/tsp2010/</guid>
+      <guid>http://mopugh.github.io/publication/tsp2010/</guid>
       <description></description>
     </item>
     
     <item>
       <title>On the Capacity of MIMO Broadcast Channels with Reduced Feedback by Antenna Selection</title>
-      <link>http://rexyroo.github.io/publication/asilomar2008/</link>
+      <link>http://mopugh.github.io/publication/asilomar2008/</link>
       <pubDate>Tue, 28 Oct 2008 19:45:23 -0700</pubDate>
-      <guid>http://rexyroo.github.io/publication/asilomar2008/</guid>
+      <guid>http://mopugh.github.io/publication/asilomar2008/</guid>
       <description></description>
     </item>
     
