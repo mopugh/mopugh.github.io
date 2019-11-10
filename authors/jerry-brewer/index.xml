@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jerry Brewer | Matthew Pugh</title>
+    <link>http://rexyroo.github.io/authors/jerry-brewer/</link>
+      <atom:link href="http://rexyroo.github.io/authors/jerry-brewer/index.xml" rel="self" type="application/rss+xml" />
+    <description>Jerry Brewer</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 21 Mar 2015 18:45:22 -0700</lastBuildDate>
+    <image>
+      <url>http://rexyroo.github.io/img/icon-192.png</url>
+      <title>Jerry Brewer</title>
+      <link>http://rexyroo.github.io/authors/jerry-brewer/</link>
+    </image>
+    
+    <item>
+      <title>Sensor Fusion for Intrusion Detection Under False Alarm Constraints</title>
+      <link>http://rexyroo.github.io/publication/sasfalsealarm/</link>
+      <pubDate>Sat, 21 Mar 2015 18:45:22 -0700</pubDate>
+      <guid>http://rexyroo.github.io/publication/sasfalsealarm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Diffuse Mid-UV Communication in the Presence of Obscurants</title>
+      <link>http://rexyroo.github.io/publication/uvasilomar/</link>
+      <pubDate>Sun, 21 Oct 2012 18:50:24 -0700</pubDate>
+      <guid>http://rexyroo.github.io/publication/uvasilomar/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

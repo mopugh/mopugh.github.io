@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.5.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Matthew Pugh">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Main Idea In the previous post, I was trying to solve the Markowitz portfolio optimization problem under the no shorts constraint:
+\begin{align} &amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp; &amp; \mathbf{x}^{T} \Sigma \mathbf{x} \
+&amp; \mbox{subject to} &amp; &amp; \bar{\mathbf{p}}^{T} \mathbf{x} \geq r_{\min} \
+&amp; &amp; &amp;\mathbf{1}^{T} \mathbf{x} = 1 \
+&amp; &amp; &amp;\mathbf{x} \geq 0 \end{align}
+where $\mathbf{x}$ is the $n$-dimensional vector given our positions in $n$ assests, $\bar{\mathbf{p}}$ is the vector of mean returns for the $n$ assets and $\Sigma$ is the covariance matrix for the $n$ assets.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://rexyroo.github.io/post/dual-markowitz/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.8dcf4f2bf761b04186e41708f85c8c70.css">
+
+  
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://rexyroo.github.io/post/dual-markowitz/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Matthew Pugh">
+  <meta property="og:url" content="http://rexyroo.github.io/post/dual-markowitz/">
+  <meta property="og:title" content="Variation on Markowitz Portfolio Optimization | Matthew Pugh">
+  <meta property="og:description" content="Main Idea In the previous post, I was trying to solve the Markowitz portfolio optimization problem under the no shorts constraint:
+\begin{align} &amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp; &amp; \mathbf{x}^{T} \Sigma \mathbf{x} \
+&amp; \mbox{subject to} &amp; &amp; \bar{\mathbf{p}}^{T} \mathbf{x} \geq r_{\min} \
+&amp; &amp; &amp;\mathbf{1}^{T} \mathbf{x} = 1 \
+&amp; &amp; &amp;\mathbf{x} \geq 0 \end{align}
+where $\mathbf{x}$ is the $n$-dimensional vector given our positions in $n$ assests, $\bar{\mathbf{p}}$ is the vector of mean returns for the $n$ assets and $\Sigma$ is the covariance matrix for the $n$ assets."><meta property="og:image" content="http://rexyroo.github.io/img/icon-192.png">
+  <meta property="twitter:image" content="http://rexyroo.github.io/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2014-03-15T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2014-03-15T00:00:00&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://rexyroo.github.io/post/dual-markowitz/"
+  },
+  "headline": "Variation on Markowitz Portfolio Optimization",
+  
+  "datePublished": "2014-03-15T00:00:00Z",
+  "dateModified": "2014-03-15T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Matthew Pugh"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Matthew Pugh",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://rexyroo.github.io/img/icon-512.png"
+    }
+  },
+  "description": "Main Idea In the previous post, I was trying to solve the Markowitz portfolio optimization problem under the no shorts constraint:\n\\begin{align} \u0026amp;\\underset{\\mathbf{x}}{\\mbox{minimize}} \u0026amp; \u0026amp; \\mathbf{x}^{T} \\Sigma \\mathbf{x} \\\n\u0026amp; \\mbox{subject to} \u0026amp; \u0026amp; \\bar{\\mathbf{p}}^{T} \\mathbf{x} \\geq r_{\\min} \\\n\u0026amp; \u0026amp; \u0026amp;\\mathbf{1}^{T} \\mathbf{x} = 1 \\\n\u0026amp; \u0026amp; \u0026amp;\\mathbf{x} \\geq 0 \\end{align}\nwhere $\\mathbf{x}$ is the $n$-dimensional vector given our positions in $n$ assests, $\\bar{\\mathbf{p}}$ is the vector of mean returns for the $n$ assets and $\\Sigma$ is the covariance matrix for the $n$ assets."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Variation on Markowitz Portfolio Optimization | Matthew Pugh</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Matthew Pugh</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/files/pugh_resume.pdf"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Variation on Markowitz Portfolio Optimization</h1>
+
+  
+
+  
+    
+
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Mar 15, 2014
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    5 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=http://rexyroo.github.io/post/dual-markowitz/&amp;text=Variation%20on%20Markowitz%20Portfolio%20Optimization" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=http://rexyroo.github.io/post/dual-markowitz/&amp;t=Variation%20on%20Markowitz%20Portfolio%20Optimization" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Variation%20on%20Markowitz%20Portfolio%20Optimization&amp;body=http://rexyroo.github.io/post/dual-markowitz/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=http://rexyroo.github.io/post/dual-markowitz/&amp;title=Variation%20on%20Markowitz%20Portfolio%20Optimization" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Variation%20on%20Markowitz%20Portfolio%20Optimization%20http://rexyroo.github.io/post/dual-markowitz/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=http://rexyroo.github.io/post/dual-markowitz/&amp;title=Variation%20on%20Markowitz%20Portfolio%20Optimization" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+<h2 id="main-idea">Main Idea</h2>
+
+<p>In the <a href="http://rexyroo.github.io/post/markowitz/" target="_blank">previous post</a>, I was trying to solve the Markowitz portfolio optimization problem under the no shorts constraint:</p>
+
+<p>\begin{align}
+&amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp; &amp; \mathbf{x}^{T} \Sigma \mathbf{x} \<br />
+&amp; \mbox{subject to} &amp; &amp; \bar{\mathbf{p}}^{T} \mathbf{x} \geq r_{\min} \<br />
+&amp; &amp; &amp;\mathbf{1}^{T} \mathbf{x} = 1 \<br />
+&amp; &amp; &amp;\mathbf{x} \geq 0
+\end{align}</p>
+
+<p>where $\mathbf{x}$ is the $n$-dimensional vector given our positions in $n$ assests, $\bar{\mathbf{p}}$ is the vector of mean returns for the $n$ assets and $\Sigma$ is the covariance matrix for the $n$ assets. In this post, I am going to flip the role of the objective function and the mean return constraint in the above optimization problem, i.e. I want to maximize the mean return under a variance constraint. The new optimization problem is</p>
+
+<p>\begin{align}
+&amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp; &amp; \bar{\mathbf{p}}^{T} \mathbf{x} \<br />
+&amp; \mbox{subject to} &amp; &amp; \mathbf{x}^{T} \Sigma \mathbf{x} \leq \sigma_{\max} \<br />
+&amp; &amp; &amp;\mathbf{1}^{T} \mathbf{x} = 1 \<br />
+&amp; &amp; &amp;\mathbf{x} \geq 0
+\end{align}</p>
+
+<p>where $\sigma_{max}$ is the maximum variance constraint. The original Markowitz optimization problem was a quadratic program (QP), where as the new optimization problem is a quadratically constrained quadratic program (QCQP). QP is a subclass of QCQP, so as one would imagine, it is more difficult to solve QCQP, but luckily <a href="http://cvxopt.org/" target="_blank">CVXOPT</a> is up to the task after we convert the QCQP into an even more general class of optimization problems - second-order cone programs (SOCP).
+<!-- PELICAN_END_SUMMARY --></p>
+
+<h2 id="qcqps-to-socps">QCQPs to SOCPs</h2>
+
+<p>CVXOPT does not have an explicit solver for QCQPs, rather we must convert the QCQP to a SOCP, or one could also convert it to a semidefinite program (SDP), which is more general than a SOCP. Note that if one is using MATLAB, there are many useful parsers that will directly solve the QCQP by doing the conversion to SOCPs or SDPs behind the scenes. Such parsers include <a href="http://cvxr.com/cvx/" target="_blank">CVX</a> and <a href="http://users.isy.liu.se/johanl/yalmip/" target="_blank">YALMIP</a>. Unfortunely, using python, our options are currently limited (to my knowledge), so we must make do with using CVXOPT and doing the conversion ourselves without the aid of a parser. The general form of a SOCP, as given in <a href="https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf" target="_blank">Boyd and Vandenberghe</a>, is</p>
+
+<p>\begin{align}
+&amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp; &amp; \mathbf{f}^{T} \mathbf{x} \<br />
+&amp; \mbox{subject to} &amp; &amp; \Vert A_{i} \mathbf{x} + \mathbf{b}_{i} \Vert_{2} \leq \mathbf{c}_{i}^{T} \mathbf{x} + d_{i} \<br />
+&amp; &amp; &amp; F \mathbf{x} = \mathbf{g} \<br />
+\end{align}</p>
+
+<p>This may not immediately look like the optimization problem that we want to solve, but the conversion is straight forward. Handling the variance constraint first for $i=1$, let $A = \Sigma^{\frac{1}{2}}$, $\mathbf{b}_{1} = 0$, $\mathbf{c}_{1} = 0$ and $d_{i} = \sqrt{\sigma_{max}}$. Next, let us handle the equality constraints $F\mathbf{x} = \mathbf{g}$. The only equality constraint we need is $\mathbf{1}^{T}\mathbf{x} = 1$, thus we set $\mathbf{F} = \mathbf{1}^{T}$ and $\mathbf{g} = 1$. Let $n$ be the number of assets, then we will need another $n$ inequality constraints of the form $\Vert A_{i} \mathbf{x} + \mathbf{b}_{i} \Vert_{2} \leq \mathbf{c}_{i}^{T} \mathbf{x} + d_{i}$ for $i = 2,\ldots,n+1$ to capture the constraint $\mathbf{x} \geq 0$. Namely, for $i = 2,\ldots,n+1$, let $A_{i} = 0$, $\mathbf{b}_{i} = 0$, $d_{i} = 0$ and $\mathbf{c}_{i} = \mathbf{e}_{i}$ where $\mathbf{e}_{i-1}$ is the $\mathbf{e}_{j}$ is the $j^{th}$ canonical basis vector.</p>
+
+<p>Unfortunately, we are not finished yet, because CVXOPT requires a specific format as specified in its <a href="http://cvxopt.org/userguide/coneprog.html#second-order-cone-programming" target="_blank">documentation</a>. The conversion from the above SOCP to the CVXOPT required format is described <a href="http://pwnetics.wordpress.com/2010/12/18/second-order-cone-programming-with-cvxopt/" target="_blank">here</a>. Following their procedure yields the following set of matrices as inputs into CVXOPT:</p>
+
+<p>\begin{align}
+&amp; G_{1} = \left [ \begin{array}{c} 0 \\ -\Sigma^{\frac{1}{2}} \end{array} \right ] &amp; \mbox{ and } &amp; \mathbf{h}_{1} = \left [ \begin{array}{c} \sqrt{\sigma_{max}} \\ \mathbf{0} \end{array} \right ] \<br />
+&amp; G_{i} = \left [ -\mathbf{e}_{i}^{T} \right ] &amp; \mbox{ and } &amp; \mathbf{h}_{i} = \left [ 0 \right ] &amp; \mbox{ for } i = 2,\ldots,n+1
+\end{align}</p>
+
+<p>with the additional equality constraints described above. When implementing the prior SOCP, errors were encountered because apparently the method to generate the covariance matrix does not guarantee a positive semi-definite $\Sigma$, which is required of a QCQP or SOCP. Because this is more an exercise in implementing ideas in python than to implementing perfect algorithms, I just made a quick fix: I project the $\Sigma$ matrix onto the positive semi-definite cone by making all the negative eigenvalues in $\Sigma$ equal to 0 (aside: in retrospect, this should be done in the <a href="http://rexyroo.github.io/post/markowitz/" target="_blank">previous post</a> as well). Thus the final implementation of the SOCP for this problem is the following additional method to my MarkowitzOpt class:</p>
+
+<pre><code class="language-python">def FlipConstraintMarkowitzOpt(meanvec,varvec,covvec,irate,varmax):
+	'''Solve QCQP by converting to SOCP
+	Format from:
+	http://cvxopt.org/userguide/coneprog.html#second-order-cone-programming'''
+
+	# Generate mean return vector
+	pbar = np.append(meanvec.values,irate)
+	# Get Values from varvec and covvec
+	varvec = varvec.values
+	covvec = covvec.values
+
+	# Generate covariance matrix
+	counter = 0
+	numPOS = pbar.size
+	SIGMA = np.zeros((numPOS,numPOS))
+	for i in np.arange(numPOS-1):
+		for j in np.arange(i,numPOS-1):
+			if i == j:
+				SIGMA[i,j] = varvec[i]
+			else:
+				SIGMA[i,j] = covvec[counter]
+				SIGMA[j,i] = SIGMA[i,j]
+				counter+=1
+
+	# Compute A matrix in optimization
+	# A is the square root of SIGMA
+	U,V = np.linalg.eig(SIGMA)
+	# Project onto PSD
+	U[U&lt;0] = 0
+	Usqrt = np.sqrt(U)
+	A = np.dot(np.diag(Usqrt),V.T)
+
+	# Generate G and h matrices
+	G1temp = np.zeros((A.shape[0]+1,A.shape[1]))
+	G1temp[1:,:] = -A
+	h1temp = np.zeros((A.shape[0]+1,1))
+	h1temp[0] = np.sqrt(varmax)	
+
+	for i in np.arange(numPOS):
+		ei = np.zeros((1,numPOS))
+		ei[0,i] = 1
+		if i == 0:
+			G2temp = [matrix(-ei)]
+			h2temp = [matrix(np.zeros((1,1)))]
+		else:
+			G2temp += [matrix(-ei)]
+			h2temp += [matrix(np.zeros((1,1)))]
+
+	# Construct list of matrices
+	Ftemp = np.ones((1,numPOS))
+	F = matrix(Ftemp)
+	g = matrix(np.ones((1,1)))
+
+	G = [matrix(G1temp)] + G2temp
+	H = [matrix(h1temp)] + h2temp
+
+	# Solve QCQP
+	# solvers.options['show_progress'] = False
+	# Passing in -matrix(pbar) since maximizing
+	sol = solvers.socp(-matrix(pbar),Gq=G,hq=H,A=F,b=g)
+	xsol = np.array(sol['x'])
+	# return answer
+	return xsol
+</code></pre>
+
+<h2 id="results">Results</h2>
+
+<p>Running the same script as in the <a href="http://rexyroo.github.io/post/markowitz/" target="_blank">previous post</a> except for calling the new method FlipConstraintMarkowitzOpt and using a maximum variance parameter of $\sigma_{max} = 0.001$ yields the following figures:</p>
+
+<p><img src="./images/output_4_0.png" alt="png" /></p>
+
+<p><img src="./images/output_4_1.png" alt="png" /></p>
+
+<p><img src="./images/output_4_2.png" alt="png" /></p>
+
+<p>The interesting thing about this project is to see how the algorithm distributes the proportion of money across assets. As with the previous project, I want to reiterate that this is not meant as an investigation into legitimate trading procedure. For comparison, below is the distribution using Markowitz portolio optimization from the previous post.</p>
+
+<p><img src="./images/output_6_1.png" alt="png" /></p>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu140709fde3940dd25333652ce7edd8cb_11170_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="http://rexyroo.github.io">Matthew Pugh</a></h5>
+      <h6 class="card-subtitle">Principal Member of Technical Staff</h6>
+      <p class="card-text">Think and wonder, wonder and think. &#8212; Dr. Suess</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    <li>
+      <a href="mailto:matthew.o.pugh@gmail.com" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/rexyroo" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/mopugh/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/files/pugh_resume.pdf" >
+        <i class="ai ai-cv"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.6cbefe3f0755301b86cd38317ded9f54.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

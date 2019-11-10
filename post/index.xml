@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts | Matthew Pugh</title>
+    <link>http://rexyroo.github.io/post/</link>
+      <atom:link href="http://rexyroo.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <description>Posts</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 20 Jul 2014 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>http://rexyroo.github.io/img/icon-192.png</url>
+      <title>Posts</title>
+      <link>http://rexyroo.github.io/post/</link>
+    </image>
+    
+    <item>
+      <title>A Generative Model Approach to Run Differential</title>
+      <link>http://rexyroo.github.io/post/run-differential-2/</link>
+      <pubDate>Sun, 20 Jul 2014 00:00:00 +0000</pubDate>
+      <guid>http://rexyroo.github.io/post/run-differential-2/</guid>
+      <description>
+
+&lt;h2 id=&#34;more-on-run-differential&#34;&gt;More On Run Differential&lt;/h2&gt;
+
+&lt;p&gt;In the &lt;a href=&#34;http://rexyroo.github.io/post/run-differential-1/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; post, I looked at run differential from a correlation point of view. The correlation analysis is not very predictive however, unless we want to assume there is a linear relationship between normalized run differential and end-of-season run differential (which there could be, but the analysis seems to suggest the joint distribution is not Gaussian in which case the correlation is difficult to interpret). In this post, I&amp;rsquo;ll take a Bayesian approach to run differential that will be more predictive in nature. Namely, I will assume that the per game run differential (not normalized) is a discrete random variable. I will use the historical data on run differential to generate a prior and then use the games played by the A&amp;rsquo;s this season to estimate the probabilities of the discrete random variable. With those parameters estimated, I can compute the distribution of run differential at the end of the season. Additionally, it is straight forward to convert the multinomial run differential distribution into a binomial win distribution. In this way, I will also compute the distribution of the number of wins at the of the season.
+&lt;!-- PELICAN_END_SUMMARY --&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;prior-run-differential-distribution&#34;&gt;Prior Run Differential Distribution&lt;/h2&gt;
+
+&lt;p&gt;From the run differential data parsed in the &lt;a href=&#34;http://rexyroo.github.io/post/run-differential-1/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt;, it is straight forward to compute the run differential distribution from all the games from 1962 to 2013. Below is the distribution:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_1_0.png&#34; alt=&#34;Histogram of Run-Differential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As is expected, the run differential is symmetric since when a team wins by, say, x runs, another team loses by x runs. I will model the run differential as a discrete random variable, i.e. let $X_{i} \in {-30,\ldots,30}$ be the run differential random variable for game $i$ and all the games will be i.i.d. realizations from this distribution. The range from -30 to 30 was chosen arbitrarily but covers all observed run differentials from 1962 onward. I will try to estimate the probabilities for each run differential value for the 2014 A&amp;rsquo;s. To do this, I will take a Bayesian approach and put a prior probability on the probabilities. Because the parameters are probabilities, we need a prior distribution on discrete probability distributions. Luckily, the &lt;a href=&#34;http://en.wikipedia.org/wiki/Dirichlet_distribution&#34; target=&#34;_blank&#34;&gt;Dirichlet distribution&lt;/a&gt; is exactly what is needed. Because the run differential random variable $X_{i}$ has support on ${-30,\ldots,30}$, there are 61 hyperparameters for the Dirichlet distribution. I want the expectation of the Dirichlet prior distribution to be equal to the historical run differential distribution in the figure above, thus the hyperparameters are proportional to the probabilities in the above graph. I will play around with the proportionality constant later.&lt;/p&gt;
+
+&lt;h2 id=&#34;bayesian-run-differential-analysis&#34;&gt;Bayesian Run Differential Analysis&lt;/h2&gt;
+
+&lt;p&gt;As stated earlier, I will model the run differential as a discrete random variable with parameters ${\theta_{-30},\ldots,\theta_{30}}$ (the probabilities for each run differential value) and a prior distribution on $\mathbf{\theta}$ (the vector of $\theta$ values) which is a Dirichlet distribution with hyperparameter $\alpha$ (the vector of $\alpha$ values). Let $\mathcal{D}_{n}$ be the observed run differential for the 2014 A&amp;rsquo;s through $n$ games. Thus, for estimating the ${\theta_{i}}$, we have the posterior distribution $p(\theta \vert \mathcal{D}_{n})$, which by Bayes theorem is proportional to $p(\mathcal{D}_{n} \vert \theta) p(\theta \vert \alpha)$ where the likelihood $p(\mathcal{D}_{n} \vert \theta)$ is a &lt;a href=&#34;http://en.wikipedia.org/wiki/Multinomial_distribution&#34; target=&#34;_blank&#34;&gt;multinomial distribution&lt;/a&gt; and the prior $p(\theta \vert \alpha)$ is the aforementioned Dirichlet distribution. The posterior in this case is well known (for example see &lt;a href=&#34;http://mitpress.mit.edu/books/machine-learning-2&#34; target=&#34;_blank&#34;&gt;Machine Learning: A Probabilistic Perspective&lt;/a&gt; Chapter 3); it is another Dirichlet distribution with parameters ${ \tilde{\alpha}_{-30},\ldots, \tilde{\alpha}_{30}} = {\alpha_{-30} + N_{-30},\ldots,\alpha_{30} + N_{30}}$ where $N_{i}$ is the number of times run differential $i$ is observed in $\mathcal{D}_{n}$. Now that we know the posterior distribution $p(\theta \vert \mathcal{D}_{n})$ is a Dirichlet distribution, we can compute the predictive posterior distribution $p(X = i \vert \mathcal{D}) = \int p(X = i \vert \theta) p(\theta \vert \mathcal{D}_{n}) d \theta$, i.e. the probability that the run differential takes on value $i$ given the data marginalizing over the parameters. It turns out that because the posterior $p(\theta \vert \mathcal{D}_{n})$ is Dirichlet and that we model $p(X = j \vert \theta) = \theta_{j}$, the previous integral has a well known solution (again see Chapter 3 of Machine Learning: A Probabilistic Perspective):&lt;/p&gt;
+
+&lt;p&gt;\begin{align}
+p(X = i \vert \mathcal{D}) = \frac{\alpha_j + N_j}{\sum (\alpha_i + N_i)}
+\end{align}&lt;/p&gt;
+
+&lt;p&gt;Thus, given the A&amp;rsquo;s run differential through $n$ games, $\mathcal{D}_n$, we can compute the probability that the A&amp;rsquo;s have run differential $j$ in a game: $p(X = j \vert \mathcal{D}_{n})$. Note this is the probability given our model and we only hope that the model is close to reality.&lt;/p&gt;
+
+&lt;h3 id=&#34;unweighted-alpha&#34;&gt;Unweighted $\alpha$&lt;/h3&gt;
+
+&lt;p&gt;Previously, it was mentioned that in order for the Dirichlet prior to have expectation equal to the historical data, the ${\alpha_{i}}$ must be proportional to the the historical run differential probabilities. In this section we will assume the ${\alpha_{i}}$ are equal to those probabilities, i.e. the proportionality constant is 1. Since we know $p(X = i \vert \mathcal{D})$ from the above analysis, we can compute the run differential for the entire season by drawing random variables from that distribution. For example, using the 39 game threshold from the previous post, we can draw $162-39=123$ random variables from this distribution to estimate the A&amp;rsquo;s end-of-season run differential. The end-of-season run differential is the sum of the run differential random variables and the known run differential after 39 games. To compute the end-of-season run differential, I use one million monte carlo runs. I also performed the analysis at the season half way point - after 81 games. Below are the end-of-season run differential distributions:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_3_0.png&#34; alt=&#34;Multinomial modeling for total run differential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Here are the same distributions, but overlapping:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_5_1.png&#34; alt=&#34;Comparing two multinomial models&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can convert the run differential distribution into a win/loss distribution since whenever the run differential is greater than 0, the team wins and whenever the run differential is less than 0, the team loses. Thus, let $p = \sum_{i&amp;gt;0} p(X = i \vert \mathcal{D})$ be the probability that the team wins, and $1-p$ be the probability that the team loses. Then we can replicate the prior analysis but rather than having a multinomial experiment, we have a &lt;a href=&#34;http://en.wikipedia.org/wiki/Binomial_distribution&#34; target=&#34;_blank&#34;&gt;binomial&lt;/a&gt; experiment. For the end-of-season run differential, we had to compute the sum of the multinomial random variables, which is why I resorted to monte carlo. In the win/loss case, the number of wins at the end of the season is known analytically and is the binomial distribution, so monte carlo is not required. Below is the distribution of the number of wins:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_7_1.png&#34; alt=&#34;Wins Model&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The mean number of wins under this model after the A&amp;rsquo;s first 39 games is $\mu_{39} = 99.34$ with variance $\sigma^{2}_{39} = 29.19$ and the mean number of wins after the A&amp;rsquo;s first 81 games is $\mu_{81} = 101.87$ with variance $\sigma^{2}_{81} = 18.92$. Note that a win/loss model could be derived directly in a similar way as the previous analysis using a binomial likelihood instead of a multinomial likelihood and a beta prior distribution rather than a Dirichlet prior.&lt;/p&gt;
+
+&lt;p&gt;The previous results assumed the hyperparameters $\alpha$ were equal to the empirical historical run differential distribution. From before, we know that $p(X = i \vert \mathcal{D}) = \frac{\alpha_j + N_j}{\sum (\alpha_i + N_i)}$, thus all the $\alpha_{i}$ are probabilities so the predictive posterior will be dominated by the observed run differentials $\mathcal{D}_{n}$. Indeed this is the case, as observed in the following plot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_9_1.png&#34; alt=&#34;Prior and Posterior Predictive Distribution&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As expected, the Dirichlet prior is essentially irrelevant and the observed run differential dominates. In this case, the historical knowledge of run differential plays no role in the end-of-season analysis. In the next sections we will place different weights on the ${\alpha_{i}}$ so the prior plays a greater role in the estimate of end-of-season run differential and the number of wins at the end of the season.&lt;/p&gt;
+
+&lt;h2 id=&#34;fully-weighted-alpha&#34;&gt;Fully Weighted $\alpha$&lt;/h2&gt;
+
+&lt;p&gt;In this section, we will take the opposite extreme, where the ${\alpha_{i}}$ are the historical run differential counts. Because there are 10,000s of games, the prior will dominate and the A&amp;rsquo;s run differential counts for 39 and 81 games will be insignificant. Below is the predictive posterior distribution with the new ${\alpha_{i}}$ hyperparameters and as expected, the prior dominates and makes the posterior equivalent to the prior:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_11_1.png&#34; alt=&#34;Prior and Posterior Predictive Distribution&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In this case, history dominates and we are not using any information from the A&amp;rsquo;s current season. Below are the same plots as the previous section, but with the historically dominate prior:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_13_0.png&#34; alt=&#34;Multinomial modeling for total run differential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_14_1.png&#34; alt=&#34;Comparing two multinomial models&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Because the past dominates, and the A&amp;rsquo;s have a well above average run differential so far this year, the predictions are pessimistic. With unweighted $\alpha$, the predicted end-of-season run differential was over 250 after both 39 and 81 games. With the dominate prior, the prediction has dropped to end-of-season run differentials of 62 and 135. Below is the end of season win distribution:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_16_1.png&#34; alt=&#34;Wins Model&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;After 39 games, the expected number of wins is $\mu_{39} = 85.50$ with variance $\sigma^{2}_{39} = 30.75$ and after 81 games, the expected number of wins is $\mu_{81} = 91.50$ with variance $\sigma^{2}_{81} = 20.25$. Once again comparing this to the previous section, we see the wins prediction is very pessimistic.&lt;/p&gt;
+
+&lt;h2 id=&#34;moderately-weighted-alpha&#34;&gt;Moderately Weighted $\alpha$&lt;/h2&gt;
+
+&lt;p&gt;In this section, I will chose a constant $c$ to multiply the unweighted ${ \alpha_{i} }$ (the historical probabilities from two section prior). For this section I will choose $c = 100$. Below are the predictive posteriors and historical prior under this weighting:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_18_1.png&#34; alt=&#34;Prior and Posterior Predictive Distribution&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We see that this weighting, as expected, causes the posterior the be inbetween the unweighted and fully weighted posteriors from the prior sections - it is a compromise between the past historical data and the A&amp;rsquo;s current season. Below are the run differential distributions using this weighting:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_20_0.png&#34; alt=&#34;Multinomial modeling for total run differential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_21_1.png&#34; alt=&#34;Comparing two multinomial models&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Again, notice how the mean run differential predictions lie inbetween the current season dominated predictions of the unweighted ${\alpha_{i}}$ and the historically dominated predictions of the fully weighted $ { \alpha_{i} } $. This last figure is the wins distribution for this weighting:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_23_1.png&#34; alt=&#34;Wins Model&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;After 39 games, the expected number of wins is $\mu_{39} = 89.48$ with variance $\sigma^{2}_{39} = 30.62$ and after 81 games, the expected number of wins is $\mu_{81} = 96.20$ with variance $\sigma^{2}_{81} = 19.98$.&lt;/p&gt;
+
+&lt;h2 id=&#34;concluding-remarks&#34;&gt;Concluding Remarks&lt;/h2&gt;
+
+&lt;p&gt;The previous analysis shows some interesting Bayesian analysis we can perform with the run differential information. The art of Bayesian analysis is justifying the choice of the prior. We looked at three different Dirichlet priors in this article. It could be possible to select the hyperprior weightings by trying to reduce the mean squared error on some test set, but that will not be persued here (due to laziness).&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>A Correlation Analysis of Run Differential</title>
+      <link>http://rexyroo.github.io/post/run-differential-1/</link>
+      <pubDate>Sat, 19 Jul 2014 00:00:00 +0000</pubDate>
+      <guid>http://rexyroo.github.io/post/run-differential-1/</guid>
+      <description>
+
+&lt;h2 id=&#34;everyone-s-talking-about-run-differential&#34;&gt;Everyone&amp;rsquo;s Talking About Run Differential&lt;/h2&gt;
+
+&lt;p&gt;So it&amp;rsquo;s been a long time since I&amp;rsquo;ve attempted a blog post. My friend and co-worker &lt;a href=&#34;http://www.sbnation.com/users/JerryBrewerEBHI&#34; target=&#34;_blank&#34;&gt;EBHI&lt;/a&gt; is a moderator at the awesome A&amp;rsquo;s blog &lt;a href=&#34;http://www.athleticsnation.com/&#34; target=&#34;_blank&#34;&gt;Athletic&amp;rsquo;s Nation&lt;/a&gt;. Growing up and now working in the East Bay, I&amp;rsquo;ve always been an A&amp;rsquo;s fan and so I thought it might be fun to do some baseball analysis. This season the A&amp;rsquo;s are doing great, and I&amp;rsquo;ve been reading a great deal about run differential. The first article chronologically I saw regarding run differential and the A&amp;rsquo;s was on &lt;a href=&#34;http://www.baseballprospectus.com/article.php?articleid=23497&#34; target=&#34;_blank&#34;&gt;Baseball Prospectus&lt;/a&gt;. Then &lt;a href=&#34;http://mlb.mlb.com/news/article/mlb/oakland-as-are-outscoring-their-opponents-at-otherworldly-rate?ymd=20140611&amp;amp;content_id=79301054&amp;amp;vkey=news_mlb&#34; target=&#34;_blank&#34;&gt;mlb.com&lt;/a&gt; had an article regarding the A&amp;rsquo;s and run differential, and most recently, two eerily similar articles were posted within a day of each &lt;a href=&#34;http://www.athleticsnation.com/2014/6/25/5843998/so-the-as-are-really-good-maybe-even-historically-good&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt; and &lt;a href=&#34;http://grantland.com/the-triangle/the-historically-dominant-oakland-as/&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;. I originally had some grand aspirations to use some fancy correlation metrics, but that will have to wait for a possible future post. In fact the analysis in this article is pretty elementary, but it does provide good python practice for me. In this analysis I will only be focusing on classical correlation coefficients.
+&lt;!-- PELICAN_END_SUMMARY --&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;correlating-run-differential-with-various-things&#34;&gt;Correlating Run Differential with Various Things&lt;/h2&gt;
+
+&lt;p&gt;The first thing I wanted to do was reproduce the same figure found in the &lt;a href=&#34;http://www.baseballprospectus.com/article.php?articleid=23497&#34; target=&#34;_blank&#34;&gt;Baseball Prospectus&lt;/a&gt; article. In order to do that I needed to download the data for all games from the 1962 to 2013 seasons and parse them to compute the game-by-game run differential. I download the data from &lt;a href=&#34;http://www.retrosheet.org/&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;. The run differential is normalized by the game number (e.g. the run differential after game 81 is divded by 81). Here&amp;rsquo;s the really simple code I used to get the files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import urllib
+
+base_url = &#39;http://www.retrosheet.org/gamelogs/&#39;
+
+for year in range(1962,2014):
+	url = base_url + &#39;gl&#39; + str(year) + &#39;.zip&#39;
+    #Change Directory Accordingly
+    directory = &#39;&#39;
+	filename = directory + &#39;gl&#39; + str(year) + &#39;.zip&#39;
+	testfile=urllib.URLopener()
+	testfile.retrieve(url,filename)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With all the data downloaded and processed, I was able to reproduce the figure:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/RunDifferential_3_0.png&#34; alt=&#34;Normalized Run Differential Correlated with End-Of-Season Normalized Run Differential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Comparing this to the &lt;a href=&#34;http://www.baseballprospectus.com/article.php?articleid=23497&#34; target=&#34;_blank&#34;&gt;Baseball Prospectus&lt;/a&gt; article, we see that they are visually identical. The analysis from the article uses a correlation value of 0.7 as being significant, and this threshold is exceeded at the 39th game. I will provide further analysis later in this article. Next I wanted to compute the correlation between normalized run differential and end-of-season winning percentage. I also included the above plot of the correlation between the game-by-game normalized run differential and end-of-season run differential. Because it&amp;rsquo;s easy enough to include, I also plotted the game-by-game winning percentage correlated with end-of-season winning percentage. Below is the correlation plot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/RunDifferential_5_0.png&#34; alt=&#34;Correlations Between Normalized Run Differential and Winning Percentage&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above plot shows that the correlation trends are very similar, but normalized run differential is less correlated with end-of-season winning percentage (red curve) than end-of-season normalized run differential (the blue curve, which seems expected). The black curve is the game-by-game winning percentage correlated with end-of-season winning percentage. Next I wanted to see if game-by-game run differential or game-by-game winning percentage correlated with the end-of-season rank. Below is the corresponding plot:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_7_0.png&#34; alt=&#34;Correlation of Normalized Run Differential and End-Of-Season Rank&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above plot shows that both normalized run differential and winning percentage do not correlate with end-of-season rankings. The main take away thus far seems to be the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;game-by-game normalized run differential correlates well with end-of-season run differential after a sufficient number of games&lt;/li&gt;
+&lt;li&gt;game-by-game winning percentage correlates well with end-of-season winning percentage after a sufficient number of games&lt;/li&gt;
+&lt;li&gt;game-by-game normalized run differential correlates well with end-of-season winning percentage after a sufficient number of games&lt;/li&gt;
+&lt;li&gt;game-by-game normalized run differential &lt;strong&gt;&lt;em&gt;does not&lt;/em&gt;&lt;/strong&gt; correlate with end-of-season rank&lt;/li&gt;
+&lt;li&gt;game-by-game winning percentage &lt;strong&gt;&lt;em&gt;does not&lt;/em&gt;&lt;/strong&gt; correlate with end-of-season rank&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;gaussian-analysis-of-normalized-run-differential&#34;&gt;Gaussian Analysis of Normalized Run Differential&lt;/h2&gt;
+
+&lt;p&gt;Just because two features appear correlated does not necessarily tell us much about the relationship between the two features. In this section I will look at the normalized run differential data and see if it appears gaussian. Below is the scatter plot of the normalized run-differential at the 39th game (the game mentioned in the &lt;a href=&#34;http://www.baseballprospectus.com/article.php?articleid=23497&#34; target=&#34;_blank&#34;&gt;Baseball Prospectus&lt;/a&gt; article where the correlation exceeds 0.7) as well as the whitened version of the data:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_9_0.png&#34; alt=&#34;Scatter Plot of Normalized Run Differential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The plot on the left is the scatter plot of end-of-season normalized run differential versus normalized run differential for game 39 in the season. It looks like it could be a multivariate gaussian. I whitened the data and the scatter plot is on the right. It should appear &amp;ldquo;spherical&amp;rdquo; after the whitening and it is hard to tell but seems like it could be. Below are the marginal histograms of the normalized run differential after game 39 and the fitted normal distribution and the histogram of the end-of-season normalized run differential and fitted histogram:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_11_0.png&#34; alt=&#34;Fitted Normal Distribution&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Running a normality test on the marginals, the p-value for the x-axis marginal is 0.55 and the p-value for the y-axis marginal is 0.008. The null hypothesis is that the data is normal, and we would reject the null hypothesis at a p-value less than 0.05 typically. Thus it seems unlikely that the y-axis data (end-of-seasson normalized run differential) is normally distributed. Below are the Q-Q plots:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_13_0.png&#34; alt=&#34;Q-Q Plot of Normalized Run Differential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The above Q-Q plots seem confirm the results of the hypothesis tests: the marginal x distribution appears pretty normal but the marginal y distribution seems skewed. For fun, below are the marginal histograms, fitted normals and Q-Q plots of the whitened data:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_15_0.png&#34; alt=&#34;Fitted Normal to Whitened Data&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_16_0.png&#34; alt=&#34;Q-Q Plots of Whitened Data&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The p-values for the marginal distribution normality tests after whitening are 0.55 and 0.61. Thus the rotated data &amp;ldquo;appears&amp;rdquo; more normal than the original data. The Q-Q plots also seem to indicate this. There do exist hypothesis tests for multivariate normality, but I&amp;rsquo;ve been lazy and did not implement them. If the data were truly bivariate normal, the data should appear guassian before and after the whitening process. Because it is the marginal y-axis distribution, which is the marginal distribution of the end-of-season normalized run differential, is the one that does not appear gaussian, none of the games can be jointly normal. Because of this, we should be careful is our intepretation of the correlation coefficient. The correlation coefficient measures linear relationships between two random variables, and is equal to the correlation coefficient of a bivariate normal when the data is jointly normal. Because it does not appear that the data is jointly normal, the correlation coefficient cannot be interpreted as the correlation coefficient of a bivariate normal.&lt;/p&gt;
+
+&lt;p&gt;We can repeat this experiment with the correlation between normalized run differential after 39 games and end-of-season winning percentage. The results are similar. Below are the scatter plots, marginal histograms and Q-Q plots:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_18_0.png&#34; alt=&#34;Scatter Plot of End-Of-Season Winning Percentage vs. Normalized Run Differential&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_19_0.png&#34; alt=&#34;Fitted Normal Distribution Original Data&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_20_0.png&#34; alt=&#34;Figure Q-Q Plot Original Data&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The p-values for the hypothesis test are 0.55 and 0.0008. The p-value for the marginal x-distribution should be the same as before as it&amp;rsquo;s the same random variable. The p-value of the marginal end-of-season winning percentage seems very unlikely to be drawn from a Gaussian distribution, and thus joint will not be Gaussian.&lt;/p&gt;
+
+&lt;p&gt;To conclude this analysis, the correlation between normalized run differential for each game and either end-of-season normalized run differential or end-of-season winning percentage definitely seems to exists, but the relationship is more complicated as it does not appear that the data is normal. Future analysis would be required to determine or model the nature of this relationship.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Variation on Markowitz Portfolio Optimization</title>
+      <link>http://rexyroo.github.io/post/dual-markowitz/</link>
+      <pubDate>Sat, 15 Mar 2014 00:00:00 +0000</pubDate>
+      <guid>http://rexyroo.github.io/post/dual-markowitz/</guid>
+      <description>
+
+&lt;h2 id=&#34;main-idea&#34;&gt;Main Idea&lt;/h2&gt;
+
+&lt;p&gt;In the &lt;a href=&#34;http://rexyroo.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt;, I was trying to solve the Markowitz portfolio optimization problem under the no shorts constraint:&lt;/p&gt;
+
+&lt;p&gt;\begin{align}
+&amp;amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp;amp; &amp;amp; \mathbf{x}^{T} \Sigma \mathbf{x} \&lt;br /&gt;
+&amp;amp; \mbox{subject to} &amp;amp; &amp;amp; \bar{\mathbf{p}}^{T} \mathbf{x} \geq r_{\min} \&lt;br /&gt;
+&amp;amp; &amp;amp; &amp;amp;\mathbf{1}^{T} \mathbf{x} = 1 \&lt;br /&gt;
+&amp;amp; &amp;amp; &amp;amp;\mathbf{x} \geq 0
+\end{align}&lt;/p&gt;
+
+&lt;p&gt;where $\mathbf{x}$ is the $n$-dimensional vector given our positions in $n$ assests, $\bar{\mathbf{p}}$ is the vector of mean returns for the $n$ assets and $\Sigma$ is the covariance matrix for the $n$ assets. In this post, I am going to flip the role of the objective function and the mean return constraint in the above optimization problem, i.e. I want to maximize the mean return under a variance constraint. The new optimization problem is&lt;/p&gt;
+
+&lt;p&gt;\begin{align}
+&amp;amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp;amp; &amp;amp; \bar{\mathbf{p}}^{T} \mathbf{x} \&lt;br /&gt;
+&amp;amp; \mbox{subject to} &amp;amp; &amp;amp; \mathbf{x}^{T} \Sigma \mathbf{x} \leq \sigma_{\max} \&lt;br /&gt;
+&amp;amp; &amp;amp; &amp;amp;\mathbf{1}^{T} \mathbf{x} = 1 \&lt;br /&gt;
+&amp;amp; &amp;amp; &amp;amp;\mathbf{x} \geq 0
+\end{align}&lt;/p&gt;
+
+&lt;p&gt;where $\sigma_{max}$ is the maximum variance constraint. The original Markowitz optimization problem was a quadratic program (QP), where as the new optimization problem is a quadratically constrained quadratic program (QCQP). QP is a subclass of QCQP, so as one would imagine, it is more difficult to solve QCQP, but luckily &lt;a href=&#34;http://cvxopt.org/&#34; target=&#34;_blank&#34;&gt;CVXOPT&lt;/a&gt; is up to the task after we convert the QCQP into an even more general class of optimization problems - second-order cone programs (SOCP).
+&lt;!-- PELICAN_END_SUMMARY --&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;qcqps-to-socps&#34;&gt;QCQPs to SOCPs&lt;/h2&gt;
+
+&lt;p&gt;CVXOPT does not have an explicit solver for QCQPs, rather we must convert the QCQP to a SOCP, or one could also convert it to a semidefinite program (SDP), which is more general than a SOCP. Note that if one is using MATLAB, there are many useful parsers that will directly solve the QCQP by doing the conversion to SOCPs or SDPs behind the scenes. Such parsers include &lt;a href=&#34;http://cvxr.com/cvx/&#34; target=&#34;_blank&#34;&gt;CVX&lt;/a&gt; and &lt;a href=&#34;http://users.isy.liu.se/johanl/yalmip/&#34; target=&#34;_blank&#34;&gt;YALMIP&lt;/a&gt;. Unfortunely, using python, our options are currently limited (to my knowledge), so we must make do with using CVXOPT and doing the conversion ourselves without the aid of a parser. The general form of a SOCP, as given in &lt;a href=&#34;https://web.stanford.edu/~boyd/cvxbook/bv_cvxbook.pdf&#34; target=&#34;_blank&#34;&gt;Boyd and Vandenberghe&lt;/a&gt;, is&lt;/p&gt;
+
+&lt;p&gt;\begin{align}
+&amp;amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp;amp; &amp;amp; \mathbf{f}^{T} \mathbf{x} \&lt;br /&gt;
+&amp;amp; \mbox{subject to} &amp;amp; &amp;amp; \Vert A_{i} \mathbf{x} + \mathbf{b}_{i} \Vert_{2} \leq \mathbf{c}_{i}^{T} \mathbf{x} + d_{i} \&lt;br /&gt;
+&amp;amp; &amp;amp; &amp;amp; F \mathbf{x} = \mathbf{g} \&lt;br /&gt;
+\end{align}&lt;/p&gt;
+
+&lt;p&gt;This may not immediately look like the optimization problem that we want to solve, but the conversion is straight forward. Handling the variance constraint first for $i=1$, let $A = \Sigma^{\frac{1}{2}}$, $\mathbf{b}_{1} = 0$, $\mathbf{c}_{1} = 0$ and $d_{i} = \sqrt{\sigma_{max}}$. Next, let us handle the equality constraints $F\mathbf{x} = \mathbf{g}$. The only equality constraint we need is $\mathbf{1}^{T}\mathbf{x} = 1$, thus we set $\mathbf{F} = \mathbf{1}^{T}$ and $\mathbf{g} = 1$. Let $n$ be the number of assets, then we will need another $n$ inequality constraints of the form $\Vert A_{i} \mathbf{x} + \mathbf{b}_{i} \Vert_{2} \leq \mathbf{c}_{i}^{T} \mathbf{x} + d_{i}$ for $i = 2,\ldots,n+1$ to capture the constraint $\mathbf{x} \geq 0$. Namely, for $i = 2,\ldots,n+1$, let $A_{i} = 0$, $\mathbf{b}_{i} = 0$, $d_{i} = 0$ and $\mathbf{c}_{i} = \mathbf{e}_{i}$ where $\mathbf{e}_{i-1}$ is the $\mathbf{e}_{j}$ is the $j^{th}$ canonical basis vector.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, we are not finished yet, because CVXOPT requires a specific format as specified in its &lt;a href=&#34;http://cvxopt.org/userguide/coneprog.html#second-order-cone-programming&#34; target=&#34;_blank&#34;&gt;documentation&lt;/a&gt;. The conversion from the above SOCP to the CVXOPT required format is described &lt;a href=&#34;http://pwnetics.wordpress.com/2010/12/18/second-order-cone-programming-with-cvxopt/&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;. Following their procedure yields the following set of matrices as inputs into CVXOPT:&lt;/p&gt;
+
+&lt;p&gt;\begin{align}
+&amp;amp; G_{1} = \left [ \begin{array}{c} 0 \\ -\Sigma^{\frac{1}{2}} \end{array} \right ] &amp;amp; \mbox{ and } &amp;amp; \mathbf{h}_{1} = \left [ \begin{array}{c} \sqrt{\sigma_{max}} \\ \mathbf{0} \end{array} \right ] \&lt;br /&gt;
+&amp;amp; G_{i} = \left [ -\mathbf{e}_{i}^{T} \right ] &amp;amp; \mbox{ and } &amp;amp; \mathbf{h}_{i} = \left [ 0 \right ] &amp;amp; \mbox{ for } i = 2,\ldots,n+1
+\end{align}&lt;/p&gt;
+
+&lt;p&gt;with the additional equality constraints described above. When implementing the prior SOCP, errors were encountered because apparently the method to generate the covariance matrix does not guarantee a positive semi-definite $\Sigma$, which is required of a QCQP or SOCP. Because this is more an exercise in implementing ideas in python than to implementing perfect algorithms, I just made a quick fix: I project the $\Sigma$ matrix onto the positive semi-definite cone by making all the negative eigenvalues in $\Sigma$ equal to 0 (aside: in retrospect, this should be done in the &lt;a href=&#34;http://rexyroo.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; as well). Thus the final implementation of the SOCP for this problem is the following additional method to my MarkowitzOpt class:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def FlipConstraintMarkowitzOpt(meanvec,varvec,covvec,irate,varmax):
+	&#39;&#39;&#39;Solve QCQP by converting to SOCP
+	Format from:
+	http://cvxopt.org/userguide/coneprog.html#second-order-cone-programming&#39;&#39;&#39;
+
+	# Generate mean return vector
+	pbar = np.append(meanvec.values,irate)
+	# Get Values from varvec and covvec
+	varvec = varvec.values
+	covvec = covvec.values
+
+	# Generate covariance matrix
+	counter = 0
+	numPOS = pbar.size
+	SIGMA = np.zeros((numPOS,numPOS))
+	for i in np.arange(numPOS-1):
+		for j in np.arange(i,numPOS-1):
+			if i == j:
+				SIGMA[i,j] = varvec[i]
+			else:
+				SIGMA[i,j] = covvec[counter]
+				SIGMA[j,i] = SIGMA[i,j]
+				counter+=1
+
+	# Compute A matrix in optimization
+	# A is the square root of SIGMA
+	U,V = np.linalg.eig(SIGMA)
+	# Project onto PSD
+	U[U&amp;lt;0] = 0
+	Usqrt = np.sqrt(U)
+	A = np.dot(np.diag(Usqrt),V.T)
+
+	# Generate G and h matrices
+	G1temp = np.zeros((A.shape[0]+1,A.shape[1]))
+	G1temp[1:,:] = -A
+	h1temp = np.zeros((A.shape[0]+1,1))
+	h1temp[0] = np.sqrt(varmax)	
+
+	for i in np.arange(numPOS):
+		ei = np.zeros((1,numPOS))
+		ei[0,i] = 1
+		if i == 0:
+			G2temp = [matrix(-ei)]
+			h2temp = [matrix(np.zeros((1,1)))]
+		else:
+			G2temp += [matrix(-ei)]
+			h2temp += [matrix(np.zeros((1,1)))]
+
+	# Construct list of matrices
+	Ftemp = np.ones((1,numPOS))
+	F = matrix(Ftemp)
+	g = matrix(np.ones((1,1)))
+
+	G = [matrix(G1temp)] + G2temp
+	H = [matrix(h1temp)] + h2temp
+
+	# Solve QCQP
+	# solvers.options[&#39;show_progress&#39;] = False
+	# Passing in -matrix(pbar) since maximizing
+	sol = solvers.socp(-matrix(pbar),Gq=G,hq=H,A=F,b=g)
+	xsol = np.array(sol[&#39;x&#39;])
+	# return answer
+	return xsol
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;results&#34;&gt;Results&lt;/h2&gt;
+
+&lt;p&gt;Running the same script as in the &lt;a href=&#34;http://rexyroo.github.io/post/markowitz/&#34; target=&#34;_blank&#34;&gt;previous post&lt;/a&gt; except for calling the new method FlipConstraintMarkowitzOpt and using a maximum variance parameter of $\sigma_{max} = 0.001$ yields the following figures:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_4_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_4_1.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_4_2.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The interesting thing about this project is to see how the algorithm distributes the proportion of money across assets. As with the previous project, I want to reiterate that this is not meant as an investigation into legitimate trading procedure. For comparison, below is the distribution using Markowitz portolio optimization from the previous post.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_6_1.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Markowitz Portfolio Optimization</title>
+      <link>http://rexyroo.github.io/post/markowitz/</link>
+      <pubDate>Sun, 09 Mar 2014 00:00:00 +0000</pubDate>
+      <guid>http://rexyroo.github.io/post/markowitz/</guid>
+      <description>
+
+&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;
+
+&lt;p&gt;Markowitz portfolio optimization is a technique that gives the optimal position in a set of investiments to minimize risk with a minimum expected return constraint. This idea is by no means new, as Markowitz introduced the idea in 1952 and was awarded the Nobel prize in 1990 for his work on &lt;a href=&#34;http://en.wikipedia.org/wiki/Modern_portfolio_theory&#34; target=&#34;_blank&#34;&gt;modern portfolio theory&lt;/a&gt;. Markowitz portfolio optimization requires that some statistics about the assests are known: the mean returns and covariance among the assests. It is unclear how to optimally estimate these parameters. When taking the &lt;a href=&#34;https://www.coursera.org/&#34; target=&#34;_blank&#34;&gt;coursera.org&lt;/a&gt; course on financial engineering from Columbia, there was a lecture on Markowitz portfolio optimization as well as a homework exercise, but these parameters were given. This positing is not about surveying different estimation techniques, nor proposing any new ones, but is rather an excuse for me to try to improve my python skills.
+&lt;!-- PELICAN_END_SUMMARY --&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;gathering-the-data&#34;&gt;Gathering The Data&lt;/h2&gt;
+
+&lt;p&gt;The first step is to get data on our assets. Here, I will be focusing on stocks. To keep things simple, I just selected five stocks: Apple, IBM, Google, Microsoft and Qualcomm. I will also consider a fixed interest rate position with zero risk. The pandas library provides an easy way to get all the stock prices at the close of every business day. The following code will produce a pandas Dataframe object with the daily adjusting closing price of the five stocks from January 1st, 2000 to January 1st, 2014. Since Google was not a publicly traded company during the beginning of this time frame, NaN are filled in. The list comprehension expression to get the data was taken from the book &lt;a href=&#34;http://www.amazon.com/Python-Data-Analysis-Wrangling-IPython/dp/1449319793&#34; target=&#34;_blank&#34;&gt;&lt;strong&gt;Python for Data Analysis&lt;/strong&gt;&lt;/a&gt; by Wes McKinney.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pandas as pd
+import numpy as np
+import pandas.io.data as web
+from pandas import Series, DataFrame
+
+StockList = [&#39;AAPL&#39;,&#39;IBM&#39;,&#39;MSFT&#39;,&#39;GOOG&#39;,&#39;QCOM&#39;]
+all_data = {}
+# For simplicity, assume fixed interest rate
+interest_rate = 0.03/12.
+# Minimum desired return
+rmin = 0.02
+for ticker in StockList:
+    all_data[ticker] = web.get_data_yahoo(ticker,&#39;1/1/2000&#39;,&#39;1/1/2014&#39;)
+    price = DataFrame({tic: data[&#39;Adj Close&#39;] for tic, 
+                       data in all_data.iteritems()})
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print price.head(10)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;             AAPL  GOOG    IBM   MSFT   QCOM
+Date                                        
+2000-01-03  26.90   NaN  96.60  42.59  77.19
+2000-01-04  24.63   NaN  93.32  41.15  69.77
+2000-01-05  24.99   NaN  96.60  41.58  67.35
+2000-01-06  22.83   NaN  94.93  40.19  60.30
+2000-01-07  23.91   NaN  94.52  40.72  64.57
+2000-01-10  23.49   NaN  98.26  41.01  68.61
+2000-01-11  22.29   NaN  99.10  39.96  62.18
+2000-01-12  20.95   NaN  99.51  38.66  59.52
+2000-01-13  23.25   NaN  98.47  39.39  61.62
+2000-01-14  24.13   NaN  99.61  41.01  60.46
+
+[10 rows x 5 columns]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;estimating-the-parameters&#34;&gt;Estimating The Parameters&lt;/h2&gt;
+
+&lt;p&gt;Now that we have the stock data we need to figure out how to compute the required parameters for the Markowitz portfolio optimization: the mean returns and covariance. I also need to pick a time frame to compute these parameters over. In this case, I choose 20 business days. Thus, the first step is to compute the returns 20 days into the future:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Specify number of days to shift
+shift = 20
+# Compute returns over the time period specified by shift
+shift_returns = price/price.shift(shift) - 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We could also have used the pandas Dataframe method pct_change with the period set to 20. Now that we have the returns over the period we want, we can compute the mean and covariance. As stated before, the purpose of this exercise is more for me to improve at python and not particularly to do anything advanced, so I opted to use a exponential weighting or an AR-1 model:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Specify filter &amp;quot;length&amp;quot;
+filter_len = shift
+shift_returns_mean = pd.ewma(shift_returns,span=filter_len)
+shift_returns_var = pd.ewmvar(shift_returns,span=filter_len)
+# Compute covariances
+NumStocks = len(StockList)
+CovSeq = pd.DataFrame()
+for FirstStock in np.arange(NumStocks-1):
+	for SecondStock in np.arange(FirstStock+1,NumStocks):
+		ColumnTitle = StockList[FirstStock] + &#39;-&#39; + StockList[SecondStock]
+		CovSeq[ColumnTitle] = pd.ewmcov(
+                                    shift_returns[StockList[FirstStock]],
+                                    shift_returns[StockList[SecondStock]],
+                                    span=filter_len)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To reiterate, I am not claiming this is the best way of estimating the parameters.&lt;/p&gt;
+
+&lt;h2 id=&#34;computing-the-markowitz-optimal-portfolio&#34;&gt;Computing The Markowitz Optimal Portfolio&lt;/h2&gt;
+
+&lt;p&gt;Now that we have the parameters we need, all that is left to do is to compute the optimal Markowitz portfolio. Let $\mathbf{x}$ be the vector describing the proportion of money to put into each assest, $\bar{\mathbf{p}}$ be the vector of mean returns, $\Sigma$ be the covariance matrix and $r_{\min}$ be the minimum expected return that is desired. Having defined those variables, the optimal Markowitz portfolio assuming no short positions is given by the following quadratic program (see &lt;a href=&#34;http://www.amazon.com/Convex-Optimization-Stephen-Boyd/dp/0521833787/ref=sr_1_1?ie=UTF8&amp;amp;qid=1394388548&amp;amp;sr=8-1&amp;amp;keywords=convex+optimization&#34; target=&#34;_blank&#34;&gt;Boyd and Vandenberghe&lt;/a&gt;)
+\begin{align}
+&amp;amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp;amp; &amp;amp; \mathbf{x}^{T} \Sigma \mathbf{x} \&lt;br /&gt;
+&amp;amp; \mbox{subject to} &amp;amp; &amp;amp; \bar{\mathbf{p}}^{T} \mathbf{x} \geq r_{\min} \&lt;br /&gt;
+&amp;amp; &amp;amp; &amp;amp;\mathbf{1}^{T} \mathbf{x} = 1 \&lt;br /&gt;
+&amp;amp; &amp;amp; &amp;amp;\mathbf{x} \geq 0
+\end{align}
+In order to solve this problem, I downloaded the python convex optimization package &lt;a href=&#34;http://cvxopt.org/&#34; target=&#34;_blank&#34;&gt;CVXOPT&lt;/a&gt; and then wrote the following class and method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from cvxopt import matrix, solvers
+import numpy as np
+
+def MarkowitzOpt(meanvec,varvec,covvec,irate,rmin):
+	&#39;&#39;&#39;Framework and variable names taken from pg.155 of Boyd and Vandenberghe
+	CVXOPT setup taken from:
+	http://cvxopt.org/userguide/coneprog.html#quadratic-programming
+	http://cvxopt.org/userguide/coneprog.html#quadratic-programming&#39;&#39;&#39;
+
+	# Number of positions
+	# Additional position for interest rate
+	numPOS = meanvec.size+1
+	# Number of stocks
+	NumStocks = meanvec.size
+	# mean return vector
+	pbar = matrix(irate,(1,numPOS))
+	pbar[:numPOS-1]=matrix(meanvec)
+
+	# Ensure feasability Code
+	pbar2 = np.array(pbar)
+	if(pbar2.max() &amp;lt; rmin):
+		rmin_constraint = irate
+	else:
+		rmin_constraint = rmin;
+
+	counter = 0
+	SIGMA = matrix(0.0,(numPOS,numPOS))
+	for i in np.arange(NumStocks):
+		for j in np.arange(i,NumStocks):
+			if i == j:
+				SIGMA[i,j] = varvec[i]
+			else:
+				SIGMA[i,j] = covvec[counter]
+				SIGMA[j,i] = SIGMA[i,j]
+				counter+=1
+
+	# Generate G matrix and h vector for inequality constraints
+	G = matrix(0.0,(numPOS+1,numPOS))
+	h = matrix(0.0,(numPOS+1,1))
+	h[-1] = -rmin_constraint
+	for i in np.arange(numPOS):
+		G[i,i] = -1
+	G[-1,:] = -pbar
+	# Generate p matrix and b vector for equality constraints
+	p = matrix(1.0,(1,numPOS))
+	b = matrix(1.0)
+	q = matrix(0.0,(numPOS,1))
+	# Run convex optimization program
+	solvers.options[&#39;show_progress&#39;] = False
+	sol=solvers.qp(SIGMA,q,G,h,p,b)
+	# Solution
+	xsol = np.array(sol[&#39;x&#39;])
+	dist_sum = xsol.sum()
+
+	return xsol
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The input variable irate describes the interest rate which is assumed fixed during the duration of the optimizaton period (defined in this example above as 20 business days, however for simplicity I will assume it is fixed for all time). The interest rate is assumed to be a risk free position. The first part of the code creates a new mean vector with the interest rate return appended (note I assumed this value is the expected return for the duration of the optimization but it may be adjusted to account for this period, i.e. the return from interest over an arbitrary duration of time). The next part of the code converts the covariance matrix into the matrix structure required of CVXOPT. Then the quadratic program is put into the cannonical form required of CVXOPT and lastly the optimal position is computed and returned.&lt;/p&gt;
+
+&lt;h2 id=&#34;putting-it-all-together&#34;&gt;Putting It All Together&lt;/h2&gt;
+
+&lt;p&gt;Now that the hard work is done, all that is left to do is actually compute the Markowitz optimal portfolio. I will start optimizing on January 3rd, 2006 (not at the beginning of our data set to allow some time for the means and covariance to stabilize a little), the the portfolio will be reoptimized every 20 business days.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Variable Initialization
+START_DATE = &#39;2006-01-03&#39;
+INDEX = shift_returns.index
+START_INDEX = INDEX.get_loc(START_DATE)
+END_DATE = INDEX[-1]
+END_INDEX = INDEX.get_loc(END_DATE)
+DATE_INDEX_iter = START_INDEX
+StockList.append(&#39;InterestRate&#39;)
+DISTRIBUTION = DataFrame(index=StockList)
+RETURNS = Series(index=INDEX)
+# Start Value
+TOTAL_VALUE = 1.0
+RETURNS[INDEX[DATE_INDEX_iter]] = TOTAL_VALUE
+
+while DATE_INDEX_iter + 20 &amp;lt; END_INDEX:
+	DATEiter = INDEX[DATE_INDEX_iter]
+	# print DATEiter
+
+	xsol = MarkowitzOpt(shift_returns_mean.ix[DATEiter],
+                        shift_returns_var.ix[DATEiter],
+                        CovSeq.ix[DATEiter],interest_rate,rmin)
+
+	dist_sum = xsol.sum()
+	DISTRIBUTION[DATEiter.strftime(&#39;%Y-%m-%d&#39;)] = xsol
+
+	DATEiter2 = INDEX[DATE_INDEX_iter+shift]
+	temp1 = price.ix[DATEiter2]/price.ix[DATEiter]
+	temp1.ix[StockList[-1]] = interest_rate+1
+	temp2 = Series(xsol.ravel(),index=StockList)
+	TOTAL_VALUE = np.sum(TOTAL_VALUE*temp2*temp1)
+	# print TOTAL_VALUE
+
+	# Increase Date
+	DATE_INDEX_iter += shift
+# 	print &#39;Date:&#39; + str(INDEX[DATE_INDEX_iter])
+	RETURNS[INDEX[DATE_INDEX_iter]] = TOTAL_VALUE
+
+# Remove dates that there are no trades from returns
+RETURNS = RETURNS[np.isfinite(RETURNS)]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lastly, let us plot our results.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import matplotlib.pyplot as plt
+%matplotlib inline
+
+temp3 = DISTRIBUTION.T
+# To prevent cramped figure, only plotting last 10 periods
+ax = temp3.ix[-10:].plot(kind=&#39;bar&#39;,stacked=True)
+plt.ylim([0,1])
+plt.xlabel(&#39;Date&#39;)
+plt.ylabel(&#39;Distribution&#39;)
+plt.title(&#39;Distribution vs. Time&#39;)
+ax.legend(loc=&#39;center left&#39;, bbox_to_anchor=(1, 0.5))
+
+
+fig, axes = plt.subplots(nrows=2,ncols=1)
+price.plot(ax=axes[0])
+shift_returns.plot(ax=axes[1])
+axes[0].set_title(&#39;Stock Prices&#39;)
+axes[0].set_xlabel(&#39;Date&#39;)
+axes[0].set_ylabel(&#39;Price&#39;)
+axes[0].legend(loc=&#39;center left&#39;, bbox_to_anchor=(1, 0.5))
+axes[1].set_title(str(shift)+ &#39; Day Shift Returns&#39;)
+axes[1].set_xlabel(&#39;Date&#39;)
+axes[1].set_ylabel(&#39;Returns &#39; + str(shift) + &#39; Days Apart&#39;)
+axes[1].legend(loc=&#39;center left&#39;, bbox_to_anchor=(1, 0.5))
+fig.tight_layout()
+
+plt.figure()
+RETURNS.plot()
+plt.xlabel(&#39;Date&#39;)
+plt.ylabel(&#39;Portolio Returns&#39;)
+plt.title(&#39;Portfolio Returns vs. Time&#39;)
+
+plt.show()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_12_0.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_12_1.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;./images/output_12_2.png&#34; alt=&#34;png&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This last plot shows us that using a our approach yielded a portfolio that increased 203%. This is obviously not to be taken too seriously as we know these stocks have done well over the past decade (surivivor bias).&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

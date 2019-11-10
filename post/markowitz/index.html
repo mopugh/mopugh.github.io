@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.5.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Matthew Pugh">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Overview Markowitz portfolio optimization is a technique that gives the optimal position in a set of investiments to minimize risk with a minimum expected return constraint. This idea is by no means new, as Markowitz introduced the idea in 1952 and was awarded the Nobel prize in 1990 for his work on modern portfolio theory. Markowitz portfolio optimization requires that some statistics about the assests are known: the mean returns and covariance among the assests.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://rexyroo.github.io/post/markowitz/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ==" crossorigin="anonymous">
+    
+
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.8dcf4f2bf761b04186e41708f85c8c70.css">
+
+  
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://rexyroo.github.io/post/markowitz/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Matthew Pugh">
+  <meta property="og:url" content="http://rexyroo.github.io/post/markowitz/">
+  <meta property="og:title" content="Markowitz Portfolio Optimization | Matthew Pugh">
+  <meta property="og:description" content="Overview Markowitz portfolio optimization is a technique that gives the optimal position in a set of investiments to minimize risk with a minimum expected return constraint. This idea is by no means new, as Markowitz introduced the idea in 1952 and was awarded the Nobel prize in 1990 for his work on modern portfolio theory. Markowitz portfolio optimization requires that some statistics about the assests are known: the mean returns and covariance among the assests."><meta property="og:image" content="http://rexyroo.github.io/img/icon-192.png">
+  <meta property="twitter:image" content="http://rexyroo.github.io/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2014-03-09T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2014-03-09T00:00:00&#43;00:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://rexyroo.github.io/post/markowitz/"
+  },
+  "headline": "Markowitz Portfolio Optimization",
+  
+  "datePublished": "2014-03-09T00:00:00Z",
+  "dateModified": "2014-03-09T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Matthew Pugh"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Matthew Pugh",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://rexyroo.github.io/img/icon-512.png"
+    }
+  },
+  "description": "Overview Markowitz portfolio optimization is a technique that gives the optimal position in a set of investiments to minimize risk with a minimum expected return constraint. This idea is by no means new, as Markowitz introduced the idea in 1952 and was awarded the Nobel prize in 1990 for his work on modern portfolio theory. Markowitz portfolio optimization requires that some statistics about the assests are known: the mean returns and covariance among the assests."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Markowitz Portfolio Optimization | Matthew Pugh</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Matthew Pugh</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/files/pugh_resume.pdf"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Markowitz Portfolio Optimization</h1>
+
+  
+
+  
+    
+
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Mar 9, 2014
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    7 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=http://rexyroo.github.io/post/markowitz/&amp;text=Markowitz%20Portfolio%20Optimization" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=http://rexyroo.github.io/post/markowitz/&amp;t=Markowitz%20Portfolio%20Optimization" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Markowitz%20Portfolio%20Optimization&amp;body=http://rexyroo.github.io/post/markowitz/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=http://rexyroo.github.io/post/markowitz/&amp;title=Markowitz%20Portfolio%20Optimization" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Markowitz%20Portfolio%20Optimization%20http://rexyroo.github.io/post/markowitz/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=http://rexyroo.github.io/post/markowitz/&amp;title=Markowitz%20Portfolio%20Optimization" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+<h2 id="overview">Overview</h2>
+
+<p>Markowitz portfolio optimization is a technique that gives the optimal position in a set of investiments to minimize risk with a minimum expected return constraint. This idea is by no means new, as Markowitz introduced the idea in 1952 and was awarded the Nobel prize in 1990 for his work on <a href="http://en.wikipedia.org/wiki/Modern_portfolio_theory" target="_blank">modern portfolio theory</a>. Markowitz portfolio optimization requires that some statistics about the assests are known: the mean returns and covariance among the assests. It is unclear how to optimally estimate these parameters. When taking the <a href="https://www.coursera.org/" target="_blank">coursera.org</a> course on financial engineering from Columbia, there was a lecture on Markowitz portfolio optimization as well as a homework exercise, but these parameters were given. This positing is not about surveying different estimation techniques, nor proposing any new ones, but is rather an excuse for me to try to improve my python skills.
+<!-- PELICAN_END_SUMMARY --></p>
+
+<h2 id="gathering-the-data">Gathering The Data</h2>
+
+<p>The first step is to get data on our assets. Here, I will be focusing on stocks. To keep things simple, I just selected five stocks: Apple, IBM, Google, Microsoft and Qualcomm. I will also consider a fixed interest rate position with zero risk. The pandas library provides an easy way to get all the stock prices at the close of every business day. The following code will produce a pandas Dataframe object with the daily adjusting closing price of the five stocks from January 1st, 2000 to January 1st, 2014. Since Google was not a publicly traded company during the beginning of this time frame, NaN are filled in. The list comprehension expression to get the data was taken from the book <a href="http://www.amazon.com/Python-Data-Analysis-Wrangling-IPython/dp/1449319793" target="_blank"><strong>Python for Data Analysis</strong></a> by Wes McKinney.</p>
+
+<pre><code class="language-python">import pandas as pd
+import numpy as np
+import pandas.io.data as web
+from pandas import Series, DataFrame
+
+StockList = ['AAPL','IBM','MSFT','GOOG','QCOM']
+all_data = {}
+# For simplicity, assume fixed interest rate
+interest_rate = 0.03/12.
+# Minimum desired return
+rmin = 0.02
+for ticker in StockList:
+    all_data[ticker] = web.get_data_yahoo(ticker,'1/1/2000','1/1/2014')
+    price = DataFrame({tic: data['Adj Close'] for tic, 
+                       data in all_data.iteritems()})
+</code></pre>
+
+<pre><code class="language-python">print price.head(10)
+</code></pre>
+
+<pre><code>             AAPL  GOOG    IBM   MSFT   QCOM
+Date                                        
+2000-01-03  26.90   NaN  96.60  42.59  77.19
+2000-01-04  24.63   NaN  93.32  41.15  69.77
+2000-01-05  24.99   NaN  96.60  41.58  67.35
+2000-01-06  22.83   NaN  94.93  40.19  60.30
+2000-01-07  23.91   NaN  94.52  40.72  64.57
+2000-01-10  23.49   NaN  98.26  41.01  68.61
+2000-01-11  22.29   NaN  99.10  39.96  62.18
+2000-01-12  20.95   NaN  99.51  38.66  59.52
+2000-01-13  23.25   NaN  98.47  39.39  61.62
+2000-01-14  24.13   NaN  99.61  41.01  60.46
+
+[10 rows x 5 columns]
+</code></pre>
+
+<h2 id="estimating-the-parameters">Estimating The Parameters</h2>
+
+<p>Now that we have the stock data we need to figure out how to compute the required parameters for the Markowitz portfolio optimization: the mean returns and covariance. I also need to pick a time frame to compute these parameters over. In this case, I choose 20 business days. Thus, the first step is to compute the returns 20 days into the future:</p>
+
+<pre><code class="language-python"># Specify number of days to shift
+shift = 20
+# Compute returns over the time period specified by shift
+shift_returns = price/price.shift(shift) - 1
+</code></pre>
+
+<p>We could also have used the pandas Dataframe method pct_change with the period set to 20. Now that we have the returns over the period we want, we can compute the mean and covariance. As stated before, the purpose of this exercise is more for me to improve at python and not particularly to do anything advanced, so I opted to use a exponential weighting or an AR-1 model:</p>
+
+<pre><code class="language-python"># Specify filter &quot;length&quot;
+filter_len = shift
+shift_returns_mean = pd.ewma(shift_returns,span=filter_len)
+shift_returns_var = pd.ewmvar(shift_returns,span=filter_len)
+# Compute covariances
+NumStocks = len(StockList)
+CovSeq = pd.DataFrame()
+for FirstStock in np.arange(NumStocks-1):
+	for SecondStock in np.arange(FirstStock+1,NumStocks):
+		ColumnTitle = StockList[FirstStock] + '-' + StockList[SecondStock]
+		CovSeq[ColumnTitle] = pd.ewmcov(
+                                    shift_returns[StockList[FirstStock]],
+                                    shift_returns[StockList[SecondStock]],
+                                    span=filter_len)
+</code></pre>
+
+<p>To reiterate, I am not claiming this is the best way of estimating the parameters.</p>
+
+<h2 id="computing-the-markowitz-optimal-portfolio">Computing The Markowitz Optimal Portfolio</h2>
+
+<p>Now that we have the parameters we need, all that is left to do is to compute the optimal Markowitz portfolio. Let $\mathbf{x}$ be the vector describing the proportion of money to put into each assest, $\bar{\mathbf{p}}$ be the vector of mean returns, $\Sigma$ be the covariance matrix and $r_{\min}$ be the minimum expected return that is desired. Having defined those variables, the optimal Markowitz portfolio assuming no short positions is given by the following quadratic program (see <a href="http://www.amazon.com/Convex-Optimization-Stephen-Boyd/dp/0521833787/ref=sr_1_1?ie=UTF8&amp;qid=1394388548&amp;sr=8-1&amp;keywords=convex+optimization" target="_blank">Boyd and Vandenberghe</a>)
+\begin{align}
+&amp;\underset{\mathbf{x}}{\mbox{minimize}} &amp; &amp; \mathbf{x}^{T} \Sigma \mathbf{x} \<br />
+&amp; \mbox{subject to} &amp; &amp; \bar{\mathbf{p}}^{T} \mathbf{x} \geq r_{\min} \<br />
+&amp; &amp; &amp;\mathbf{1}^{T} \mathbf{x} = 1 \<br />
+&amp; &amp; &amp;\mathbf{x} \geq 0
+\end{align}
+In order to solve this problem, I downloaded the python convex optimization package <a href="http://cvxopt.org/" target="_blank">CVXOPT</a> and then wrote the following class and method:</p>
+
+<pre><code class="language-python">from cvxopt import matrix, solvers
+import numpy as np
+
+def MarkowitzOpt(meanvec,varvec,covvec,irate,rmin):
+	'''Framework and variable names taken from pg.155 of Boyd and Vandenberghe
+	CVXOPT setup taken from:
+	http://cvxopt.org/userguide/coneprog.html#quadratic-programming
+	http://cvxopt.org/userguide/coneprog.html#quadratic-programming'''
+
+	# Number of positions
+	# Additional position for interest rate
+	numPOS = meanvec.size+1
+	# Number of stocks
+	NumStocks = meanvec.size
+	# mean return vector
+	pbar = matrix(irate,(1,numPOS))
+	pbar[:numPOS-1]=matrix(meanvec)
+
+	# Ensure feasability Code
+	pbar2 = np.array(pbar)
+	if(pbar2.max() &lt; rmin):
+		rmin_constraint = irate
+	else:
+		rmin_constraint = rmin;
+
+	counter = 0
+	SIGMA = matrix(0.0,(numPOS,numPOS))
+	for i in np.arange(NumStocks):
+		for j in np.arange(i,NumStocks):
+			if i == j:
+				SIGMA[i,j] = varvec[i]
+			else:
+				SIGMA[i,j] = covvec[counter]
+				SIGMA[j,i] = SIGMA[i,j]
+				counter+=1
+
+	# Generate G matrix and h vector for inequality constraints
+	G = matrix(0.0,(numPOS+1,numPOS))
+	h = matrix(0.0,(numPOS+1,1))
+	h[-1] = -rmin_constraint
+	for i in np.arange(numPOS):
+		G[i,i] = -1
+	G[-1,:] = -pbar
+	# Generate p matrix and b vector for equality constraints
+	p = matrix(1.0,(1,numPOS))
+	b = matrix(1.0)
+	q = matrix(0.0,(numPOS,1))
+	# Run convex optimization program
+	solvers.options['show_progress'] = False
+	sol=solvers.qp(SIGMA,q,G,h,p,b)
+	# Solution
+	xsol = np.array(sol['x'])
+	dist_sum = xsol.sum()
+
+	return xsol
+</code></pre>
+
+<p>The input variable irate describes the interest rate which is assumed fixed during the duration of the optimizaton period (defined in this example above as 20 business days, however for simplicity I will assume it is fixed for all time). The interest rate is assumed to be a risk free position. The first part of the code creates a new mean vector with the interest rate return appended (note I assumed this value is the expected return for the duration of the optimization but it may be adjusted to account for this period, i.e. the return from interest over an arbitrary duration of time). The next part of the code converts the covariance matrix into the matrix structure required of CVXOPT. Then the quadratic program is put into the cannonical form required of CVXOPT and lastly the optimal position is computed and returned.</p>
+
+<h2 id="putting-it-all-together">Putting It All Together</h2>
+
+<p>Now that the hard work is done, all that is left to do is actually compute the Markowitz optimal portfolio. I will start optimizing on January 3rd, 2006 (not at the beginning of our data set to allow some time for the means and covariance to stabilize a little), the the portfolio will be reoptimized every 20 business days.</p>
+
+<pre><code class="language-python"># Variable Initialization
+START_DATE = '2006-01-03'
+INDEX = shift_returns.index
+START_INDEX = INDEX.get_loc(START_DATE)
+END_DATE = INDEX[-1]
+END_INDEX = INDEX.get_loc(END_DATE)
+DATE_INDEX_iter = START_INDEX
+StockList.append('InterestRate')
+DISTRIBUTION = DataFrame(index=StockList)
+RETURNS = Series(index=INDEX)
+# Start Value
+TOTAL_VALUE = 1.0
+RETURNS[INDEX[DATE_INDEX_iter]] = TOTAL_VALUE
+
+while DATE_INDEX_iter + 20 &lt; END_INDEX:
+	DATEiter = INDEX[DATE_INDEX_iter]
+	# print DATEiter
+
+	xsol = MarkowitzOpt(shift_returns_mean.ix[DATEiter],
+                        shift_returns_var.ix[DATEiter],
+                        CovSeq.ix[DATEiter],interest_rate,rmin)
+
+	dist_sum = xsol.sum()
+	DISTRIBUTION[DATEiter.strftime('%Y-%m-%d')] = xsol
+
+	DATEiter2 = INDEX[DATE_INDEX_iter+shift]
+	temp1 = price.ix[DATEiter2]/price.ix[DATEiter]
+	temp1.ix[StockList[-1]] = interest_rate+1
+	temp2 = Series(xsol.ravel(),index=StockList)
+	TOTAL_VALUE = np.sum(TOTAL_VALUE*temp2*temp1)
+	# print TOTAL_VALUE
+
+	# Increase Date
+	DATE_INDEX_iter += shift
+# 	print 'Date:' + str(INDEX[DATE_INDEX_iter])
+	RETURNS[INDEX[DATE_INDEX_iter]] = TOTAL_VALUE
+
+# Remove dates that there are no trades from returns
+RETURNS = RETURNS[np.isfinite(RETURNS)]
+</code></pre>
+
+<p>Lastly, let us plot our results.</p>
+
+<pre><code class="language-python">import matplotlib.pyplot as plt
+%matplotlib inline
+
+temp3 = DISTRIBUTION.T
+# To prevent cramped figure, only plotting last 10 periods
+ax = temp3.ix[-10:].plot(kind='bar',stacked=True)
+plt.ylim([0,1])
+plt.xlabel('Date')
+plt.ylabel('Distribution')
+plt.title('Distribution vs. Time')
+ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+
+fig, axes = plt.subplots(nrows=2,ncols=1)
+price.plot(ax=axes[0])
+shift_returns.plot(ax=axes[1])
+axes[0].set_title('Stock Prices')
+axes[0].set_xlabel('Date')
+axes[0].set_ylabel('Price')
+axes[0].legend(loc='center left', bbox_to_anchor=(1, 0.5))
+axes[1].set_title(str(shift)+ ' Day Shift Returns')
+axes[1].set_xlabel('Date')
+axes[1].set_ylabel('Returns ' + str(shift) + ' Days Apart')
+axes[1].legend(loc='center left', bbox_to_anchor=(1, 0.5))
+fig.tight_layout()
+
+plt.figure()
+RETURNS.plot()
+plt.xlabel('Date')
+plt.ylabel('Portolio Returns')
+plt.title('Portfolio Returns vs. Time')
+
+plt.show()
+</code></pre>
+
+<p><img src="./images/output_12_0.png" alt="png" /></p>
+
+<p><img src="./images/output_12_1.png" alt="png" /></p>
+
+<p><img src="./images/output_12_2.png" alt="png" /></p>
+
+<p>This last plot shows us that using a our approach yielded a portfolio that increased 203%. This is obviously not to be taken too seriously as we know these stocks have done well over the past decade (surivivor bias).</p>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu140709fde3940dd25333652ce7edd8cb_11170_250x250_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="http://rexyroo.github.io">Matthew Pugh</a></h5>
+      <h6 class="card-subtitle">Principal Member of Technical Staff</h6>
+      <p class="card-text">Think and wonder, wonder and think. &#8212; Dr. Suess</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+    <li>
+      <a href="mailto:matthew.o.pugh@gmail.com" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/rexyroo" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/mopugh/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/files/pugh_resume.pdf" >
+        <i class="ai ai-cv"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log==" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.6cbefe3f0755301b86cd38317ded9f54.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
